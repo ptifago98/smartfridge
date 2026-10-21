@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductFormScreen from '../screens/ProductFormScreen';
 import Tabs from './Tabs';
 import type { RootStackParamList } from './types';
+import ProductDetailScreen from '../screens/ProductDetailScreen';
+import ScannerScreen from '../screens/ScannerScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -17,6 +19,8 @@ export default function RootNavigator() {
         component={ProductFormScreen}
         options={{ title: 'Add product', presentation: 'modal' }}
       />
+      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ title: 'Product' }} />
+      <Stack.Screen name="Scanner" component={ScannerScreen} options={{ title: 'Scan a product' }} />
     </Stack.Navigator>
   );
 }

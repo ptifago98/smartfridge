@@ -20,6 +20,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker",
+      [
+      "expo-camera", {
+     "cameraPermission": "SmartFridge uses the camera to scan product barcodes.",
+    "recordAudioAndroid": false
+  }
+    ]
+  ]
+    
   }
 }
