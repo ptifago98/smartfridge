@@ -1,6 +1,7 @@
 // src/theme.ts
 import { MD3LightTheme, type MD3Theme } from 'react-native-paper';
 import type { ExpiryStatus } from './types/product';
+import { DefaultTheme as NavigationDefaultTheme, type Theme } from '@react-navigation/native';
 
 export const theme: MD3Theme = {
   ...MD3LightTheme,                 // copy everything from the default theme
@@ -9,6 +10,18 @@ export const theme: MD3Theme = {
     primary: '#2E7D4F',             // then replace these ones
     primaryContainer: '#D4EDDC',
     background: '#F3F5F2',
+  },
+};
+
+export const navigationTheme: Theme = {
+  ...NavigationDefaultTheme,
+  colors: {
+    ...NavigationDefaultTheme.colors,
+    primary: theme.colors.primary,          // active tab, back button
+    background: theme.colors.background,    // behind every screen
+    card: theme.colors.surface,             // headers + tab bar
+    text: theme.colors.onSurface,           // header titles
+    border: theme.colors.outlineVariant,
   },
 };
 

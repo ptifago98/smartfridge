@@ -7,6 +7,7 @@ export type TabParamList = {
   Stats: undefined;
 };
 
+
 export type RootStackParamList = {
   Tabs: NavigatorScreenParams<TabParamList>;
   ProductForm:
@@ -21,6 +22,8 @@ export type RootStackParamList = {
     | undefined;
   ProductDetail: { productId: string };
   Scanner: undefined;
+  RecipeDetail: { recipeId: string; title?: string };
+  Favourites: undefined;
 };
 
 /** Props type for stack screens: gives typed `navigation` and `route`. */

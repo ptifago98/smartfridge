@@ -12,6 +12,7 @@ export interface Product {
   id: string;
   name: string;
   brand?: string;
+  ingredient?: string;
   /** EAN barcode, missing for manual entries */
   barcode?: string;
   /** Picture from Open Food Facts */

@@ -4,6 +4,8 @@ import Tabs from './Tabs';
 import type { RootStackParamList } from './types';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import ScannerScreen from '../screens/ScannerScreen';
+import FavouritesScreen from '../screens/FavouritesScreen';
+import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,6 +23,8 @@ export default function RootNavigator() {
       />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ title: 'Product' }} />
       <Stack.Screen name="Scanner" component={ScannerScreen} options={{ title: 'Scan a product' }} />
+      <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} options={{ title: 'Recipe' }} />
+      <Stack.Screen name="Favourites" component={FavouritesScreen} options={{ title: 'My favourites' }} />
     </Stack.Navigator>
   );
 }

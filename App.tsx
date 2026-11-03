@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { ActivityIndicator, PaperProvider, Text } from 'react-native-paper';
 import { useAuth } from './src/hooks/useAuth';
 import RootNavigator from './src/navigation/RootNavigator';
-import { theme } from './src/theme';
+import { theme, navigationTheme } from './src/theme';
 
 export default function App() {
   const { user, loading, error } = useAuth();
@@ -28,7 +28,7 @@ export default function App() {
           <Text>Could not connect: {error}</Text>
         </View>
       ) : (
-        <NavigationContainer>
+        <NavigationContainer theme={navigationTheme}>
           <RootNavigator />
         </NavigationContainer>
         

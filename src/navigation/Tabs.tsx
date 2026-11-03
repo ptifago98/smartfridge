@@ -9,7 +9,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 
 export default function Tabs() {
   return (
-    <Tab.Navigator screenOptions={{ tabBarActiveTintColor: '#2E7D4F' }}>
+    <Tab.Navigator>
       <Tab.Screen
         name="Fridge"
         component={FridgeScreen}

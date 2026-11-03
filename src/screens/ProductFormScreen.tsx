@@ -31,6 +31,7 @@ export default function ProductFormScreen({
   const [showPicker, setShowPicker] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ingredient, setIngredient] = useState('');
 
   // Header title depends on the mode
   useLayoutEffect(() => {
@@ -47,6 +48,7 @@ export default function ProductFormScreen({
       setDate(fromISODate(p.expiryDate));
       setBarcode(p.barcode);                                           
       setImageUrl(p.imageUrl);
+      setIngredient(p.ingredient ?? '');
     });
   }, [productId]);
 
@@ -71,6 +73,7 @@ export default function ProductFormScreen({
         expiryDate: toISODate(date),
         barcode,                                                       
         imageUrl,
+        ingredient: ingredient.trim().toLowerCase(),
       };
       if (productId) {
         await updateProduct(productId, data);
@@ -88,6 +91,7 @@ export default function ProductFormScreen({
     <ScrollView
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets
     >
         {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
 
@@ -107,6 +111,13 @@ export default function ProductFormScreen({
         value={brand}
         onChangeText={setBrand}
         mode="outlined"
+      />
+      <TextInput
+        label="Recipe keyword (English, e.g. milk)"
+        value={ingredient}
+        onChangeText={setIngredient}
+        mode="outlined"
+        autoCapitalize="none"
       />
 
       <View style={styles.dateRow}>

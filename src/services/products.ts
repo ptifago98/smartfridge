@@ -87,3 +87,17 @@ export function subscribeProduct(id: string, onData: (product: Product | null) =
     onData(snap.exists() ? ({ id: snap.id, ...snap.data() } as Product) : null),
   );
 }
+
+/** Live list of products marked consumed or thrown since a given time (ms). */
+export function subscribeProductsChangedSince(
+  since: number,
+  onData: (products: Product[]) => void,
+  onError: (error: Error) => void,
+): Unsubscribe {
+  const q = query(productsRef(), where('statusChangedAt', '>=', since));
+  return onSnapshot(
+    q,
+    (snap) => onData(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Product)),
+    onError,
+  );
+}
