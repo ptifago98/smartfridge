@@ -3,6 +3,8 @@ import {
   query, updateDoc, where, type Unsubscribe,
 } from 'firebase/firestore';
 import type { NewProduct, Product, ProductStatus } from '../types/product';
+import { deleteField } from 'firebase/firestore';               
+import { cancelReminder, scheduleExpiryReminder } from './notifications';
 import { auth, db } from './firebase';
 
 /** users/{uid}/products */
@@ -13,11 +15,15 @@ function productsRef() {
 }
 
 export async function addProduct(data: NewProduct): Promise<string> {
-  const ref = await addDoc(productsRef(), {
-    ...data,
-    status: 'active',
-    createdAt: Date.now(),
+  const ref = await addDoc(productsRef(), { ...data, status: 'active', createdAt: Date.now() });
+
+  const notificationId = await scheduleExpiryReminder({
+    productId: ref.id,
+    name: data.name,
+    expiryDate: data.expiryDate,
   });
+  if (notificationId) await updateDoc(ref, { notificationId });
+
   return ref.id;
 }
 
@@ -26,19 +32,39 @@ export async function getProduct(id: string): Promise<Product | null> {
   return snap.exists() ? ({ id: snap.id, ...snap.data() } as Product) : null;
 }
 
-export function updateProduct(id: string, changes: Partial<NewProduct>) {
-  return updateDoc(doc(productsRef(), id), changes);
+export async function updateProduct(id: string, changes: Partial<NewProduct>) {
+  const current = await getProduct(id);
+  if (!current) throw new Error('Product not found');
+
+  await cancelReminder(current.notificationId);
+  const notificationId = await scheduleExpiryReminder({
+    productId: id,
+    name: changes.name ?? current.name,
+    expiryDate: changes.expiryDate ?? current.expiryDate,
+  });
+
+  await updateDoc(doc(productsRef(), id), {
+    ...changes,
+    notificationId: notificationId ?? deleteField(),
+  });
 }
 
-export function setProductStatus(id: string, status: ProductStatus) {
-  return updateDoc(doc(productsRef(), id), { status, statusChangedAt: Date.now() });
+export async function setProductStatus(id: string, status: ProductStatus) {
+  const current = await getProduct(id);
+  await cancelReminder(current?.notificationId);   // eaten or thrown: no reminder needed
+  await updateDoc(doc(productsRef(), id), {
+    status,
+    statusChangedAt: Date.now(),
+    notificationId: deleteField(),
+  });
 }
 
-export function deleteProduct(id: string) {
-  return deleteDoc(doc(productsRef(), id));
+export async function deleteProduct(id: string) {
+  const current = await getProduct(id);
+  await cancelReminder(current?.notificationId);
+  await deleteDoc(doc(productsRef(), id));
 }
 
-/** Live list of active products, sorted by expiry date. */
 export function subscribeActiveProducts(
   onData: (products: Product[]) => void,
   onError: (error: Error) => void,

@@ -6,6 +6,8 @@ import type { RootStackScreenProps } from '../navigation/types';
 import { deleteProduct, setProductStatus, subscribeProduct } from '../services/products';
 import type { Product, ProductStatus } from '../types/product';
 import { fromISODate } from '../utils/expiry';
+import { logScheduledReminders, scheduleTestReminder } from '../services/notifications';
+
 
 export default function ProductDetailScreen({ navigation, route }: RootStackScreenProps<'ProductDetail'>) {
   const { productId } = route.params;
@@ -50,6 +52,15 @@ export default function ProductDetailScreen({ navigation, route }: RootStackScre
 
       <Text>Expires on {fromISODate(product.expiryDate).toLocaleDateString()}</Text>
       {!!product.barcode && <Text>Barcode: {product.barcode}</Text>}
+
+      <>
+    <Button icon="bell-ring-outline" onPress={() => scheduleTestReminder(product.name)}>
+      Test reminder (10 s)
+    </Button>
+    <Button icon="format-list-bulleted" onPress={logScheduledReminders}>
+      Log scheduled reminders
+    </Button>
+  </>
 
       <Button mode="contained" icon="check" onPress={() => markAs('consumed')}>
         Consumed

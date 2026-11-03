@@ -11,6 +11,7 @@ export function useActiveProducts() {
     const unsubscribe = subscribeActiveProducts(
       (list) => {
         setProducts(list);
+        
         setLoading(false);
       },
       (e) => {

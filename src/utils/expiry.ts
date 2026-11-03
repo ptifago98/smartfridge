@@ -1,9 +1,17 @@
 import type { ExpiryStatus } from '../types/product';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
+export const REMINDER_HOUR = 9;
 export const SOON_DAYS = 3;
 
-/** Date → 'YYYY-MM-DD' (local time) */
+export function getReminderDate(expiryDate: string, now = new Date()): Date | null {
+  const reminder = fromISODate(expiryDate);
+  reminder.setDate(reminder.getDate() - 1);
+  reminder.setHours(REMINDER_HOUR, 0, 0, 0);
+  return reminder.getTime() > now.getTime() ? reminder : null;
+}
+
+
 export function toISODate(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0'); // months start at 0!
